@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "126146501871",
+    "project_id": "shopbar-b2270",
+    "storage_bucket": "shopbar-b2270.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126146501871:android:195f79ff6b0f4a43ec8f1a",
+        "android_client_info": {
+          "package_name": "com.example.shopbar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNQfllJatjxsR0QklUul_tYNKPuPeat1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
