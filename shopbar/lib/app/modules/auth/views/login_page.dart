@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_pages.dart';
+import '../controllers/login_controller.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends GetView<LoginController> {
   const LoginPage({super.key});
 
   @override
@@ -40,6 +40,7 @@ class LoginPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               TextFormField(
+                onChanged: controller.updateEmail,
                 decoration: InputDecoration(
                   hintText: 'Masukkan email',
                   border: OutlineInputBorder(
@@ -58,6 +59,7 @@ class LoginPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               TextFormField(
+                onChanged: controller.updatePassword,
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: 'Masukkan password',
@@ -86,13 +88,11 @@ class LoginPage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               // Login Button
-              SizedBox(
+              Obx(() => SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Get.offAllNamed('/home');
-                  },
+                  onPressed: controller.isLoading.value ? null : () => controller.login(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
@@ -100,15 +100,17 @@ class LoginPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text(
-                    'Masuk',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: controller.isLoading.value
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          'Masuk',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                 ),
-              ),
+              )),
               const SizedBox(height: 16),
               // Register Link
               Row(
@@ -116,9 +118,7 @@ class LoginPage extends StatelessWidget {
                 children: [
                   const Text('Belum punya akun?'),
                   TextButton(
-                  onPressed: () {
-                    Get.toNamed(Routes.register);
-                  },
+                    onPressed: controller.navigateToRegister,
                     child: const Text(
                       'Daftar',
                       style: TextStyle(

@@ -38,6 +38,7 @@ class RegisterPage extends GetView<RegisterController> {
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
+                    onChanged: controller.updateFullName,
                     decoration: InputDecoration(
                       hintText: 'Masukkan nama lengkap',
                       border: OutlineInputBorder(
@@ -57,6 +58,7 @@ class RegisterPage extends GetView<RegisterController> {
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
+                    onChanged: controller.updateEmail,
                     decoration: InputDecoration(
                       hintText: 'Masukkan email',
                       border: OutlineInputBorder(
@@ -76,6 +78,7 @@ class RegisterPage extends GetView<RegisterController> {
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
+                    onChanged: controller.updatePassword,
                     obscureText: true,
                     decoration: InputDecoration(
                       hintText: 'Masukkan password',
@@ -96,6 +99,7 @@ class RegisterPage extends GetView<RegisterController> {
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
+                    onChanged: controller.updateConfirmPassword,
                     obscureText: true,
                     decoration: InputDecoration(
                       hintText: 'Masukkan konfirmasi password',
@@ -108,13 +112,11 @@ class RegisterPage extends GetView<RegisterController> {
                   const SizedBox(height: 30),
                   
                   // Register button
-                  SizedBox(
+                  Obx(() => SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Get.offAllNamed('/home');
-                      },
+                      onPressed: controller.isLoading.value ? null : () => controller.register(),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         foregroundColor: Colors.white,
@@ -122,23 +124,23 @@ class RegisterPage extends GetView<RegisterController> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Text(
-                        'Daftar',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: controller.isLoading.value
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text(
+                              'Daftar',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
-                  ),
+                  )),
                   
                   const SizedBox(height: 20),
                   
                   // Back to login
                   TextButton(
-                    onPressed: () {
-                      Get.back();
-                    },
+                    onPressed: controller.navigateToLogin,
                     child: const Text(
                       'Sudah punya akun? Masuk disini',
                       style: TextStyle(

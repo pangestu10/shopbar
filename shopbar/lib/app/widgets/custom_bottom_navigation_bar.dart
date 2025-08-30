@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
 
-  const CustomBottomNavigationBar({Key? key, required this.currentIndex}) : super(key: key);
+  const CustomBottomNavigationBar({super.key, required this.currentIndex});
 
   @override
   Widget build(BuildContext context) {
