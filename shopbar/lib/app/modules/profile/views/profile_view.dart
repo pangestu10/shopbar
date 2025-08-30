@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../controllers/profile_controller.dart';
 import '../../../widgets/custom_bottom_navigation_bar.dart';
+import '../../../services/auth_service.dart';
 
 class ProfileView extends GetView<ProfileController> {
   const ProfileView({super.key});
@@ -27,11 +28,11 @@ class ProfileView extends GetView<ProfileController> {
                 CircleAvatar(
                   radius: 50,
                   backgroundImage: NetworkImage(
-                      user['image'] ?? 'https://avatars.githubusercontent.com/u/12345678?v=4'),
+                      user['photoURL'] ?? 'https://avatars.githubusercontent.com/u/12345678?v=4'),
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  '${user['name']?['firstname'] ?? ''} ${user['name']?['lastname'] ?? ''}',
+                  user['displayName'] ?? user['email'] ?? 'User',
                   style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
@@ -82,9 +83,21 @@ class ProfileView extends GetView<ProfileController> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // Logout functionality
-                      Get.offAllNamed('/login');
+                      try {
+                        final authService = Get.find<AuthService>();
+                        await authService.signOut();
+                        Get.offAllNamed('/login');
+                      } catch (e) {
+                        Get.snackbar(
+                          'Logout Gagal',
+                          'Terjadi kesalahan saat logout',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,

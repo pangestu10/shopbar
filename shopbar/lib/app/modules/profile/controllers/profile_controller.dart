@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
-import '../services/profile_service.dart';
+import '../../../services/auth_service.dart';
 
 class ProfileController extends GetxController {
   var user = {}.obs;
   var isLoading = true.obs;
 
-  final ProfileService _profileService = ProfileService();
+  final AuthService _authService = Get.find<AuthService>();
 
   @override
   void onInit() {
@@ -16,8 +16,14 @@ class ProfileController extends GetxController {
   void fetchUser() async {
     try {
       isLoading(true);
-      var userData = await _profileService.fetchUser();
-      user.value = userData;
+      final currentUser = _authService.currentUser;
+      if (currentUser != null) {
+        user.value = {
+          'email': currentUser.email,
+          'displayName': currentUser.displayName,
+          'photoURL': currentUser.photoURL,
+        };
+      }
     } finally {
       isLoading(false);
     }

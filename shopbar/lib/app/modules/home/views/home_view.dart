@@ -17,7 +17,7 @@ class HomeView extends GetView<HomeController> {
             padding: const EdgeInsets.only(right: 16.0),
             child: Center(
                           child: Obx(() => Text(
-                            'Hello, ${controller.user['email'] ?? 'User'}',
+                            'Hello, ${controller.user['displayName'] ?? controller.user['email'] ?? 'User'}',
                             style: const TextStyle(fontSize: 14),
                           )),
             ),

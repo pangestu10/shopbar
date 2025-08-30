@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import '../services/home_service.dart';
-import '../../profile/services/profile_service.dart';
+import '../../../services/auth_service.dart';
 
 class HomeController extends GetxController {
   var homeProductsList = <dynamic>[].obs;
@@ -8,7 +8,7 @@ class HomeController extends GetxController {
   var isLoading = true.obs;
 
   final HomeService _homeService = HomeService();
-  final ProfileService _profileService = ProfileService();
+  final AuthService _authService = Get.find<AuthService>();
 
   @override
   void onInit() {
@@ -30,8 +30,14 @@ class HomeController extends GetxController {
 
   void fetchUser() async {
     try {
-      var userData = await _profileService.fetchUser();
-      user.value = userData;
+      final currentUser = _authService.currentUser;
+      if (currentUser != null) {
+        user.value = {
+          'email': currentUser.email,
+          'displayName': currentUser.displayName,
+          'photoURL': currentUser.photoURL,
+        };
+      }
     } catch (e) {
       // Handle error
     }
