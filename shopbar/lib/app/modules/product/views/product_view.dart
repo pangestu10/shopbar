@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controllers/news_controller.dart';
-import 'news_detail_view.dart';
+import '../controllers/product_controller.dart';
+import '../../../widgets/custom_bottom_navigation_bar.dart';
+import '../../cart/controllers/cart_controller.dart';
 
-class NewsView extends GetView<NewsController> {
-  const NewsView({super.key});
+class ProductView extends GetView<ProductController> {
+  const ProductView({super.key});
 
   final List<Map<String, String>> infoItems = const [
     {
@@ -20,9 +21,11 @@ class NewsView extends GetView<NewsController> {
 
   @override
   Widget build(BuildContext context) {
+    final CartController cartController = Get.put(CartController());
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('News'),
+        title: const Text('Product'),
         centerTitle: true,
       ),
       body: Obx(() {
@@ -35,9 +38,9 @@ class NewsView extends GetView<NewsController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // News Section
+                  // Product Section
                   const Text(
-                    'Berita - Nasional',
+                    'Produk - Nasional',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -47,32 +50,45 @@ class NewsView extends GetView<NewsController> {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.newsList.length,
+                    itemCount: controller.productList.length,
                     itemBuilder: (context, index) {
-                      final news = controller.newsList[index];
+                      final product = controller.productList[index];
                       return Card(
                         margin: const EdgeInsets.only(bottom: 10),
                         child: ListTile(
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
-                              news['image'],
+                              product['image'],
                               width: 80,
                               height: 80,
                               fit: BoxFit.cover,
                             ),
                           ),
                           title: Text(
-                            news['title'],
+                            product['title'],
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          subtitle: Text(news['date'] ?? ''),
-                          trailing: const Icon(Icons.arrow_forward_ios),
-                          onTap: () {
-                            Get.to(() => NewsDetailView(news: news));
-                          },
+                          subtitle: Text(product['date'] ?? ''),
+                          trailing: Wrap(
+                            spacing: 12,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.arrow_forward_ios),
+                                onPressed: () {
+                                  Get.toNamed('/product-detail', arguments: {'id': product['id']});
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.add_shopping_cart),
+                                onPressed: () {
+                                  cartController.addToCart(product);
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -127,14 +143,17 @@ class NewsView extends GetView<NewsController> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    info['title']!,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
+                                  child: SizedBox(
+                                    width: 134, // 150 - 16 padding
+                                    child: Text(
+                                      info['title']!,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ],
@@ -150,36 +169,7 @@ class NewsView extends GetView<NewsController> {
           );
         }
       }),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              Get.offAllNamed('/home');
-              break;
-            case 1:
-              Get.offAllNamed('/news');
-              break;
-            case 2:
-              Get.offAllNamed('/profile');
-              break;
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.newspaper),
-            label: 'News',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Account',
-          ),
-        ],
-      ),
+      bottomNavigationBar: const CustomBottomNavigationBar(currentIndex: 1),
     );
   }
 }

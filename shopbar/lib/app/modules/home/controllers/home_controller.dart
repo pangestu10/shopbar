@@ -1,27 +1,39 @@
 import 'package:get/get.dart';
 import '../services/home_service.dart';
+import '../../profile/services/profile_service.dart';
 
 class HomeController extends GetxController {
-  var homeNewsList = <dynamic>[].obs;
+  var homeProductsList = <dynamic>[].obs;
+  var user = {}.obs;
   var isLoading = true.obs;
 
   final HomeService _homeService = HomeService();
+  final ProfileService _profileService = ProfileService();
 
   @override
   void onInit() {
-    fetchHomeNews();
+    fetchHomeProducts();
+    fetchUser();
     super.onInit();
   }
 
-  void fetchHomeNews() async {
+  void fetchHomeProducts() async {
     try {
-      isLoading(true);
-      var news = await _homeService.fetchHomeNews();
-      if (news != null) {
-        homeNewsList.value = news;
-      }
+      var products = await _homeService.fetchHomeProducts();
+      homeProductsList.value = products;
+    } catch (e) {
+      // Handle error
     } finally {
-      isLoading(false);
+      isLoading.value = false;
+    }
+  }
+
+  void fetchUser() async {
+    try {
+      var userData = await _profileService.fetchUser();
+      user.value = userData;
+    } catch (e) {
+      // Handle error
     }
   }
 }

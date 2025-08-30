@@ -17,9 +17,7 @@ class ProfileController extends GetxController {
     try {
       isLoading(true);
       var userData = await _profileService.fetchUser();
-      if (userData != null) {
-        user.value = userData;
-      }
+      user.value = userData;
     } finally {
       isLoading(false);
     }
